@@ -19,8 +19,21 @@ import re
 import struct
 import time
 from socket import *
+#from colorama import Fore 
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+   WHITE = '\033[0m'
 
-banner = """\033[1;31;40m\033[3;37;40m                                                                                  
+banner = color.BOLD+color.RED+"""                                                                               
 @@@@@@@@@@    @@@@@@     @@@  @@@@@@@@              @@@@@@@@     @@@   @@@@@@@@   
 @@@@@@@@@@@  @@@@@@@    @@@@  @@@@@@@@             @@@@@@@@@@   @@@@  @@@@@@@@@@  
 @@! @@! @@!  !@@       @@@!!       @@!             @@!   @@@@  @@@!!  @@!   @@@@  
@@ -30,15 +43,15 @@ banner = """\033[1;31;40m\033[3;37;40m
 !!:     !!:       !:!    !!:   !!:                 !!:!   !!!    !!:  !!:!   !!!  
 :!:     :!:      !:!     :!:  :!:                  :!:    !:!    :!:  :!:    !:!  
 :::     ::   :::: ::     :::   ::                  ::::::: ::    :::  ::::::: ::  
- :      :    :: : :       ::  : :                   : : :  :      ::   : : :  :\033[0;37;40m   
-                                                                                  
-		                                        MS17-010 >> SCANNER v1.0
-                               Written by:
-                                Omar Peña
-                          omarp.work@gmail.com
+ :      :    :: : :       ::  : :                   : : :  :      ::   : : :  :  
+                                                                                  """+color.WHITE+color.BOLD+"""
+		                                        MS17-010 >> SCANNER v1.0"""+color.YELLOW+"""
+                               Written by:"""+color.WHITE+color.BOLD+"""
+                                Omar Peña"""+color.CYAN+"""
+                          omarp.work@gmail.com 
                      https://twitter.com/p3nt3ster
 
-"""
+"""+color.WHITE+""
 
 usage = "[+] Usage: "+sys.argv[0]+" ip or ip/CIDR or ip/subnet\n\n"
 usage += "    Example: "+sys.argv[0]+" 192.168.0.1\n"
@@ -176,29 +189,28 @@ def handle(data, iptarget):
 
         return struct.pack(">i", len(smbpipefid0))+smbpipefid0
 
+vulnerables = 0
 def conn(targets):
     vuln = 0
+    global vulnerables
     try:
         s = socket(AF_INET, SOCK_STREAM)
         s.settimeout(10)
         s.connect((str(targets), 445))
         s.send(packetnego)
-
         try:
-            while True:
-
+            while  True:
                 data = s.recv(1024)
                 # Get Native OS from Session Setup AndX Response
                 if data[8:10] == "\x73\x00":
                     nativeos = data[45:100].split(b'\x00' * 1)[0]
-
                 ## Trans Response, Error: STATUS_INSUFF_SERVER_RESOURCES
                 if data[8:10] == "\x25\x05":
                     ## 0x05 0x02 0x00 0xc0 = STATUS_INSUFF_SERVER_RESOURCES
                     if data[9:13] == "\x05\x02\x00\xc0":
-                        print("[+] "+str(targets)+" is likely VULNERABLE to MS17-010  ("+nativeos+")")
+                        print("[+] "+str(targets)+color.BOLD+" is likely VULNERABLE to MS17-010  ("+color.WHITE+nativeos+")")
+                        vulnerables += 1
                         vuln = 1
-
                 s.send(handle(data, str(targets)))
 
         except Exception:
@@ -208,7 +220,7 @@ def conn(targets):
     except Exception as msg:
         pass
         if SingleMultiScanCheck == 2:
-            print("[+] Can't connecto to "+str(targets))
+            print("[+] Can't connecto to "+str(targets)+"\n")
             sys.exit(1)
 
     return vuln
@@ -241,7 +253,8 @@ if SingleMultiScanCheck == 1:
     for a in threads:
         a.join()
 
-    print("\n[+] "+str(totip)+" ip checked in %s seconds " % (time.time() - start_time))
+    print("\n[+] "+color.BOLD+str(totip)+" ip checked in %s seconds " % (time.time() - start_time)+"and Founds: "+color.YELLOW+str(vulnerables)+" hosts vulnerables\n"+color.WHITE)
 else:
     if conn(ip) == 0:
-        print("[+] "+str(ip)+" NOT vulnerable to MS17-010")
+        print("[+] "+str(ip)+" NOT vulnerable to MS17-010\n")
+print("")        
