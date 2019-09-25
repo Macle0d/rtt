@@ -42,3 +42,4 @@ Se debe instalar el programa wine y agregar la arquitectura de 32bits al sistema
 1- Máquina atacante con Kali Linux y Metasploit
 2- Exploit Eternalblue-DoublePulsar (https://github.com/ElevenPaths/Eternalblue-Doublepulsar-Metasploit)
 3- Máquina víctima, Windows 7 con arquitectura de 32bits 
+
