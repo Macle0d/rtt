@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
 import os, sys
 # Python 2 Only
@@ -19,7 +19,7 @@ import re
 import struct
 import time
 from socket import *
-
+from ipcalc import IP, Network
 
 class color:
    PURPLE = '\033[95m'
@@ -191,40 +191,9 @@ def handle(data, iptarget):
         return struct.pack(">i", len(smbpipefid0))+smbpipefid0
 
 vulnerables = 0
-def conn(targets):
-    vuln = 0
-    global vulnerables
-    try:
-        s = socket(AF_INET, SOCK_STREAM)
-        s.settimeout(10)
-        s.connect((str(targets), 445))
-        s.send(packetnego)
-        try:
-            while  True:
-                data = s.recv(1024)
-                # Get Native OS from Session Setup AndX Response
-                if data[8:10] == "\x73\x00":
-                    nativeos = data[45:100].split(b'\x00' * 1)[0]
-                ## Trans Response, Error: STATUS_INSUFF_SERVER_RESOURCES
-                if data[8:10] == "\x25\x05":
-                    ## 0x05 0x02 0x00 0xc0 = STATUS_INSUFF_SERVER_RESOURCES
-                    if data[9:13] == "\x05\x02\x00\xc0":
-                        print("[+] "+str(targets)+color.BOLD+" is likely VULNERABLE to MS17-010  ("+color.WHITE+nativeos+")")
-                        vulnerables += 1
-                        vuln = 1
-                s.send(handle(data, str(targets)))
+ips = sys.argv[1].decode('utf-8')
 
-        except Exception:
-            pass
-            s.close()
 
-    except Exception as msg:
-        pass
-        if SingleMultiScanCheck == 2:
-            print("[+] Can't connecto to "+str(targets)+"\n")
-            sys.exit(1)
-
-    return vuln
 
 if len(sys.argv)<=1:
     print(banner)
@@ -233,29 +202,41 @@ if len(sys.argv)<=1:
 
 print(banner)
 
-ip = sys.argv[1].decode('utf-8')
+try:
+    s = socket(AF_INET, SOCK_STREAM)
+    s.settimeout(10)
+    s.connect((str(targets), 445))
+    s.send(packetnego)
+    try:
+        for x in Network(ips): 
+            print("entro al while"+str(x))
+            s = socket(AF_INET, SOCK_STREAM)
+            s.settimeout(10)
+            s.connect((str(x), 445))
+            s.send(packetnego)
+            data = s.recv(1024)
+            # Get Native OS from Session Setup AndX Response
+            if data[8:10] == "\x73\x00":
+                nativeos = data[45:100].split(b'\x00' * 1)[0]
+            ## Trans Response, Error: STATUS_INSUFF_SERVER_RESOURCES
+            if data[8:10] == "\x25\x05":
+                ## 0x05 0x02 0x00 0xc0 = STATUS_INSUFF_SERVER_RESOURCES
+                if data[9:13] == "\x05\x02\x00\xc0":
+                    print("[+] "+str(ips)+color.BOLD+" is likely VULNERABLE to MS17-010  ("+color.WHITE+nativeos+")")
+                    vulnerables += 1
+            s.send(handle(data, str(ips)))
+    except Exception:
+        pass
+        s.close()
 
-SingleMultiScanCheck = checkNet(ip)
+except Exception as msg:
+    pass
+    #Sif SingleMultiScanCheck == 2:
+    print("[+] Can't connecto to "+str(ips)+"\n")
+    sys.exit(1)
 
-threads = []
-
-if SingleMultiScanCheck == 1:
-    net4 = ipaddress.ip_network(ip, strict=False)
-    totip = 0
-    start_time = time.time()
-    for i in net4.hosts():
-        if str(i)[-2:] != ".0" and str(i)[-4:] != ".255":
-            totip += 1
-            t = threading.Thread(target=conn, args=(i,))
-            threads.append(t)
-            t.start()
-            time.sleep(0.01)
-
-    for a in threads:
-        a.join()
-
-    print("\n[+] "+color.BOLD+str(totip)+" ip checked in %s seconds " % (time.time() - start_time)+"and Founds: "+color.YELLOW+str(vulnerables)+" hosts vulnerables\n"+color.WHITE)
-else:
-    if conn(ip) == 0:
-        print("[+] "+str(ip)+" NOT vulnerable to MS17-010\n")
+#    print("\n[+] "+color.BOLD+str(totip)+" ip checked in %s seconds " % (time.time() - start_time)+"and Founds: "+color.YELLOW+str(vulnerables)+" hosts vulnerables\n"+color.WHITE)
+#else:
+#    if conn(ip) == 0:
+#        print("[+] "+str(ip)+" NOT vulnerable to MS17-010\n")
 print("")        
