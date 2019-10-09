@@ -8,7 +8,7 @@ echo -e "\e[38;5;246m
   ╚═╝  ╚═══╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝\e[38;5;252m
                                                \e[251m Version: \e[5m\e[30;48;5;251m 1.1 \e[0m\e[25m"
 echo ""
-n=$(locate .nse | grep "\b$1" | cut -d '/' -f 6 | cut -d '.' -f 1)
+n=$(locate .nse | grep nmap |  grep "\b$1" | awk -F "/" '{print $NF}' | cut -d '.' -f 1)
 
 if [ -z $1 ]; then
 	echo ""
