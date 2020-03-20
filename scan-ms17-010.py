@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
-import os, sys
+import os
+import sys
 # Python 2 Only
 if (sys.version_info > (3, 0)):
     print('Python 3 detected')
