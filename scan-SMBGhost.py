@@ -71,7 +71,7 @@ if len(sys.argv)<=1:
     print(banner)
     print(usage)
     final_time=time()-init_time
-    print(color.WHITE+"Elapsed time in seconds "+str(final_time)+color.RESET)
+    #print(color.WHITE+"Elapsed time in seconds "+str(final_time)+color.RESET)
     sys.exit(1)
 else:
   print(banner)
@@ -93,10 +93,9 @@ for ip in ips:
     #else:
     #    print(str(ip) + " Not vulnerable")
 
-print(color.YELLOW+"-"*42)
-
 if totalIP > 1:
   print(color.BOLD+" [+] "+str(totalIP)+" ip checked and Founds: "+color.YELLOW+str(totalVuln)+" hosts vulnerables\n"+color.WHITE)
-
-final_time=time()-init_time
-print("Elapsed time in seconds "+str(final_time)+color.RESET)
+  print("-"*44)
+  final_time=time()-init_time
+  print(" Elapsed time in seconds "+str(final_time)+color.RESET)
+print("")
