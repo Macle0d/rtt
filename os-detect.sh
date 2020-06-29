@@ -11,18 +11,18 @@ function ctrl_c(){
 # función ejecuta un ping para determinar SO
 is_alive_ping()
 {
-	var=$(ping -W 1 -b -c 1 $1 | grep ttl | awk '{print $6}' | awk -F "=" '{print $2}')
+	var=$(ping -W 1000 -b -c 1 $1 | grep ttl | awk '{print $6}' | awk -F "=" '{print $2}')
 	if [ ! -z "$var" ]
 	then
 		if [ $var -ge 0 ] && [ $var -le 64 ] 
 		then
-			echo -e " $1\t=> Linux"
+			echo -e " $1\t➡ Linux"
 		elif [ $var -ge 65 ] && [ $var -le 128 ]
 		then
-			echo -e " $1\t=> Windows"
+			echo -e " $1\t➡ Windows"
 		elif [ $var -ge 129 ] && [ $var -le 254 ]
 		then
-			echo -e " $1\t=> Solaris/AIX"
+			echo -e " $1\t➡ Solaris/AIX"
 		fi
 	fi
 }
