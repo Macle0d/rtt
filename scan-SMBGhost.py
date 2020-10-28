@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# -*- coding: utf-8 -*-
 # Original Code by https://github.com/ollypwn/SMBGhost
 # Improvements and optimization by: 
 # Omar Peña @p3nt3ster (omarp.work@gmail.com)
@@ -30,15 +30,11 @@ class color:
    RESET = '\033[39m'
 
 banner = color.WHITE+color.BOLD+"""
-          .-.
-         / ee\_
-       __\  o/ )
-      (___   \/
-        /     \\
-      _/       \\    CVE-2020-0796
- .·.¸(_____.~._/ """+color.CYAN+"""SMBGhost Scanner """+color.YELLOW+"""1.0"""+color.BOLD+color.WHITE+"""
-
-    """
+ ╔═╗╔╦╗╔╗ ╔═╗┬ ┬┌─┐┌─┐┌┬┐
+ ╚═╗║║║╠╩╗║ ╦├─┤│ │└─┐ │ 
+ ╚═╝╩ ╩╚═╝╚═╝┴ ┴└─┘└─┘ ┴ 
+           """+color.CYAN+"""CVE"""+color.WHITE+"""-"""+color.YELLOW+"""𝟮𝟬𝟮𝟬"""+color.WHITE+"""-"""+color.YELLOW+"""𝟬𝟳𝟵𝟲"""+color.WHITE+"""
+"""
 
 usage = color.RED+color.BOLD+" [+]"+color.WHITE+color.BOLD+" Usage: "+sys.argv[0]+" ip or ip/CIDR\n\n"
 usage += "   "+color.UNDERLINE+"Example"+color.END+color.BOLD+":"+" "+color.GREEN+sys.argv[0]+color.WHITE+color.BOLD+" 192.168.0.1\n"
@@ -51,11 +47,11 @@ def check_port(iptocheck, lebinary):
   sock.settimeout(0.3)
   
   try:
-      sock.connect(( str(iptocheck),  445 ))
+    sock.connect(( str(iptocheck),  445 ))
   except:
-      sock.close()
-      #continue
-      return ''
+    sock.close()
+    #continue
+    return ''
   
   sock.send(lebinary)
 
@@ -84,11 +80,13 @@ totalVuln = 0
 
 for ip in ips:
     totalIP+= 1
-    res= check_port(ip, pkt)
-
+    try:
+      res= check_port(ip, pkt)
+    except:
+      continue
     if res[68:70] == b"\x11\x03" or res[70:72] == b"\x02\x00":
         #lehost=socket.gethostname()+" > "
-        print(" "+color.BOLD+color.WHITE+str(ip) +color.BOLD+color.RED+" Vulnerable"+color.END)
+        print(color.GREEN+color.BOLD+" [+] "+color.WHITE+str(ip) +" ➡"+color.BOLD+color.RED+" Vulnerable"+color.END)
         totalVuln += 1
     #else:
     #    print(str(ip) + " Not vulnerable")
@@ -98,4 +96,8 @@ if totalIP > 1:
   print("-"*44)
   final_time=time()-init_time
   print(" Elapsed time in seconds "+str(final_time)+color.RESET)
+  print("-"*44)
+  print("\n\thappy hacking... ツ")
+else:
+  print("\n\thappy hacking... ツ")
 print("")

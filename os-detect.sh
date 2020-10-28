@@ -4,6 +4,7 @@
 
 # función para detectar cuando el usuario teclea Ctrl+C
 trap ctrl_c INT
+stty -echoctl
 function ctrl_c(){
 	echo -e "\n\n [*] detected Ctrl+C exiting...\n"
     tput cnorm; exit 0
